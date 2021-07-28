@@ -126,6 +126,7 @@ function ChartTests() {
     options: { padding: 0.03, isGrouped: false },
   });
 
+  //eslint-disable-next-line
   const [data, setData] = useState(rawData)
   const [keyObj, setKeyObj] = useState([
     { name: "hot dog", enabled: true },
@@ -136,28 +137,20 @@ function ChartTests() {
     { name: "donut", enabled: true },
   ]);
 
-  const filterData = () =>{
-    var res
-    keyObj.forEach(e => {
-      //bracket notation for referencing json properties with whitespace
-      //just messing around to figure out if i can get averages for all items.
-    });
-  }
-
-  const calcAverage = (numArray) =>{
-    let total = 0
-    for (let i = 0; i < numArray.length; i++) {
-      total += numArray[i]
-    }
-    return total/numArray.length
-  }
+  // const calcAverage = (numArray) =>{
+  //   let total = 0
+  //   for (let i = 0; i < numArray.length; i++) {
+  //     total += numArray[i]
+  //   }
+  //   return total/numArray.length
+  // }
   const keyNames = keyObj
     .map((i) => (i.enabled ? i.name : ""))
     .filter((i) => i !== "");
 
   const [dialogOpen, setOpen] = useState(false);
   const themeOptions = [
-    "nivo",
+    "nivo", 
     "dark2",
     "red_blue",
     "greys",
