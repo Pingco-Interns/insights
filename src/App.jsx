@@ -5,13 +5,15 @@ import "../node_modules/react-resizable/css/styles.css"
 
 import PrototypeGrid from './components/PrototypeGrid'
 import AddChart from './components/AddChart'
+import ReactQueryTrials from './components/ReactQueryTrials'
 
 function App() {
   return ( 
   <div>
     {/* <ChartTests /> */}
-    <PrototypeGrid />
+    {/* <PrototypeGrid /> */}
     {/* <AddChart /> */}
+    <ReactQueryTrials />
   </div>
   );
 }

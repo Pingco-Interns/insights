@@ -810,11 +810,6 @@ function PrototypeGrid(props) {
     const ReactGridLayout = WidthProvider(RGL);
 
     const [dataProcessed, setData] = useState(dataRaw);
-    const addToData = () => { //this doesnt work properly yet, JSON throws errrors. I want to make this a form or an import from excel later 
-        let inputData = JSON.parse(addText);
-        setData(...dataProcessed, inputData);
-        setAddDialogClose();
-    };
 
     const [layoutList, setLayoutList] = useState(dataProcessed.map((i)=>i.layout)) //layout defines the positions for each element.
     const curLayout = layoutList
@@ -831,13 +826,6 @@ function PrototypeGrid(props) {
     const [showAddDialog, setAddDialog] = useState(false);
     const setAddDialogOpen = () => setAddDialog(true);
     const setAddDialogClose = () => setAddDialog(false);
-
-    const [addText, setText] = useState(
-        'Insert JSON data here. Soon to be revamped to be more user friendly',
-    );
-    const handleAddTextChange = (e) => {
-        setText(e.target.value);
-    };
 
     return (
         <div>
@@ -955,6 +943,7 @@ function PrototypeGrid(props) {
                     </Button>
                 </DialogActions>
             </Dialog>
+            
             <Dialog
                 open={showAddDialog}
                 onClose={setAddDialogClose}
@@ -965,12 +954,11 @@ function PrototypeGrid(props) {
                             <TextareaAutosize
                                 minRows={4}
                                 maxRows={10}
-                                value={addText}
-                                onChange={handleAddTextChange}></TextareaAutosize>
+                                ></TextareaAutosize>
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={addToData} color="default">
+                    <Button onClick={setAddDialogClose} color="default">
                         Save
                     </Button>
                     <Button onClick={setAddDialogClose} color="default">

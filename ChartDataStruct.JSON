@@ -1,0 +1,22 @@
+{
+    "data": [{"itemName":"value"}],
+    "keys": ["itemName", "item2name", "all headers need to be in a string array."],
+    "indexBy": "row in data to be indexed by.",
+    "layout": {
+        "i": "d",
+        "x": "x axis position of the item in the grid",
+        "y": "y axis position of the item in the grid",
+        "w": "width of the item. Measured by how large the grid space is.",
+        "h": "Height of the item. Measured by how large the grid space is.",
+        "other": {
+            "option" : "there are other options within the grid layout system to make it static, unselectable, etc."
+        }
+    },
+    "options":{
+        "colors" : "must be a nivo selected theme",
+        "defs" : "JSON objects with custom visual settings for chart",
+        "fill" : "Specify which of the keys mentioned above is attached to 'defs'",
+        "legends" : "Specify which property to generate the legend from. default keys.",
+        "anchor" : "word based position of the legend."
+    }
+}

@@ -11,10 +11,9 @@ import XLSX from 'xlsx';
 const AddChart = (props)=>{
 
     const [status, setStatus] = useState(0) //0:idle and empty, 1:uploading, 2: uploaded and ready
-    const [file, setCurFile] = useState()
+    const [file, setFile] = useState()
     const [theme, setTheme] = useState("nivo")
     const [data, setData] = useState()
-    const [cols, setCols] = useState()
 
     const [parsed, setParsed] = useState({
         key: "",
@@ -34,7 +33,7 @@ const AddChart = (props)=>{
 
       function onChange(e) {   
         // const files = e.target.files;
-        setCurFile(e.target.files[0])
+        setFile(e.target.files[0])
         console.log(e.target.files[0]);
         const reader = new FileReader()
         reader.onload = (e) =>{
@@ -49,9 +48,15 @@ const AddChart = (props)=>{
             var json = XLSX.utils.sheet_to_json(workbook.Sheets[sheetNames[sheetIndex-1]])
     
             setData(json)
-            console.log(data);
         }
 
+        reader.readAsBinaryString(e.target.files[0])
+        genData()
+      }
+
+      const genData = ()=>{
+          var rawData = data;
+          console.log(rawData);
       }
 
     return (
