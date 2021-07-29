@@ -42,7 +42,9 @@ function Example() {
     //invalidate and re fetch the query with key 'query' when done.
 
     //can be used with asynchronous data fetching too, like graphql
-    return <div></div>;
+    return <div>
+        {data.description}
+    </div>;
 }
 
 // export default ReactQueryTrials;

@@ -2,11 +2,11 @@ import React, {useState} from 'react';
 import RGL, {WidthProvider} from 'react-grid-layout';
 
 import Chart from './Chart';
+import AddChartModal from './AddChartModal';
+import TableRender from './TableRender';
 
 import Button from '@material-ui/core/Button';
 import TableChartIcon from '@material-ui/icons/TableChart';
-import Fab from '@material-ui/core/Fab';
-import AddIcon from '@material-ui/icons/Add';
 import DragHandleIcon from '@material-ui/icons/DragHandle';
 
 import Dialog from '@material-ui/core/Dialog';
@@ -15,16 +15,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
-import Tooltip from '@material-ui/core/Tooltip';
-
-import TextareaAutosize from '@material-ui/core/TextareaAutosize';
+import { Tooltip } from '@material-ui/core';
 
 //Need to show modal and dialog windows with the table here. If not, it'll be constrainted to the chart's div and not to the viewport.
 
@@ -823,14 +814,11 @@ function PrototypeGrid(props) {
     const setTableDialogOpen = () => setShowTableDialog(true);
     const setTableDialogClose = () => setShowTableDialog(false);
 
-    const [showAddDialog, setAddDialog] = useState(false);
-    const setAddDialogOpen = () => setAddDialog(true);
-    const setAddDialogClose = () => setAddDialog(false);
-
     return (
         <div>
             {/* no need to provide additional constraints, nivo inherits the initial width defined in layout */}
             {/* need to split this into components as well, getting a wee bit messy */}
+
             <ReactGridLayout
                 style={{border: '1px solid grey'}}
                 className="layout"
@@ -895,47 +883,12 @@ function PrototypeGrid(props) {
                     );
                 })}
             </ReactGridLayout>
-
+            
             <Dialog open={showTableDialog} onClose={setTableDialogClose}>
                 <DialogTitle id="form-dialog-title">Chart Details</DialogTitle>
                 <DialogContent>
                     <DialogContentText>Chart data:</DialogContentText>
-                    <TableContainer component={Paper}>
-                        <Table className={{minWidth: 650}} size="small">
-                            <TableHead>
-                                <TableRow>
-                                    {/* gonna hardcode the first row for readability. */}
-                                    <TableCell>Country/Food</TableCell>
-                                    {currentData.keys.map((i) => {
-                                        return (
-                                            <TableCell align="right">
-                                                {i}
-                                            </TableCell>
-                                        );
-                                    })}
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {currentData.data.map((i) => {
-                                    //this convoluted mess is to render the table using keys and data grabbed from the
-                                    return (
-                                        <TableRow>
-                                            <TableCell align="right">
-                                                {i.country}
-                                            </TableCell>
-                                            {currentData.keys.map((j) => {
-                                                return (
-                                                    <TableCell align="right">
-                                                        {i[j]}
-                                                    </TableCell>
-                                                );
-                                            })}
-                                        </TableRow>
-                                    );
-                                })}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
+                    <TableRender data={currentData} />
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={setTableDialogClose} color="default">
@@ -943,37 +896,8 @@ function PrototypeGrid(props) {
                     </Button>
                 </DialogActions>
             </Dialog>
-            
-            <Dialog
-                open={showAddDialog}
-                onClose={setAddDialogClose}
-                aria-labelledby="form-dialog">
-                <DialogTitle id="form-dialog">Add an entry</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>
-                            <TextareaAutosize
-                                minRows={4}
-                                maxRows={10}
-                                ></TextareaAutosize>
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={setAddDialogClose} color="default">
-                        Save
-                    </Button>
-                    <Button onClick={setAddDialogClose} color="default">
-                        Cancel
-                    </Button>
-                </DialogActions>
-            </Dialog>
+            <AddChartModal />
 
-            <Fab
-                color="primary"
-                onClick={setAddDialogOpen}
-                style={butStyle}
-                aria-label="add">
-                <AddIcon />
-            </Fab>
         </div>
     );
 }

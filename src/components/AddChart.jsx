@@ -55,8 +55,11 @@ const AddChart = (props)=>{
       }
 
       const genData = ()=>{
-          var rawData = data;
-          console.log(rawData);
+        if (typeof data !== 'undefined') {
+          data.forEach(e => {
+            console.log(Object.keys(e))
+          });          
+        }
       }
 
     return (
