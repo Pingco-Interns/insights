@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import RGL, {WidthProvider} from 'react-grid-layout';
+import RGL, {WidthProvider, Responsive} from 'react-grid-layout';
 
 import Chart from './Chart';
 import AddChartModal from './AddChartModal';
@@ -8,6 +8,7 @@ import TableRender from './TableRender';
 import Button from '@material-ui/core/Button';
 import TableChartIcon from '@material-ui/icons/TableChart';
 import DragHandleIcon from '@material-ui/icons/DragHandle';
+import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
 
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -134,7 +135,8 @@ const dataRaw = [
         ],
         keys: ['hot dog', 'burger', 'sandwich', 'kebab', 'fries', 'donut'],
         indexBy: 'country',
-        layout: {i: 'a', x: 1, y: 0, w: 2, h: 2},
+        layout: {i: 'a', x: 1, y: 0, w: 3, h: 3, minW: 3, minH:3 },
+        active: true,
         options: {
             colors: "nivo",
             defs: [
@@ -287,7 +289,8 @@ const dataRaw = [
         ],
         keys: ['hot dog', 'burger', 'sandwich', 'kebab', 'fries', 'donut'],
         indexBy: 'country',
-        layout: {i: 'b', x: 2, y: 0, w: 3, h: 3},
+        layout: {i: 'b', x: 2, y: 0, w: 3, h: 3, minW: 3, minH:3},
+        active: true,
         options: {
             colors: "pastel1",
             defs: [
@@ -439,7 +442,8 @@ const dataRaw = [
         ],
         keys: ['hot dog', 'burger', 'sandwich', 'kebab', 'fries', 'donut'],
         indexBy: 'country',
-        layout: {i: 'c', x: 0, y: 1, w: 5, h: 2},
+        layout: {i: 'c', x: 0, y: 1, w: 3, h: 3, minW: 3, minH:3},
+        active: true,
         options: {
             colors: "blues",
             defs: [
@@ -592,7 +596,8 @@ const dataRaw = [
         ],
         keys: ['hot dog', 'burger', 'sandwich', 'kebab', 'fries', 'donut'],
         indexBy: 'country',
-        layout: {i: 'd', x: 0, y: 2, w: 2, h: 2},
+        layout: {i: 'd', x: 0, y: 2, w: 3, h: 3, minW: 3, minH:3},
+        active: false,
         options: {
             colors: "oranges",
             defs: [
@@ -744,7 +749,8 @@ const dataRaw = [
         ],
         keys: ['hot dog', 'burger', 'sandwich', 'kebab', 'fries', 'donut'],
         indexBy: 'country',
-        layout: {i: 'e', x: 2, y: 2, w: 5, h: 5},
+        layout: {i: 'e', x: 2, y: 2, w: 5, h: 5, minW: 3, minH:3},
+        active: false,
         options: {
             colors: "dark2",
             defs: [
@@ -790,43 +796,79 @@ const dataRaw = [
 
 //I have a const outside of the component ^ that gives the raw data, which is then loaded into a state and used to render the charts
 function PrototypeGrid(props) {
-    const butStyle = {
-        margin: 0,
-        top: 'auto',
-        right: 20,
-        bottom: 20,
-        left: 'auto',
-        position: 'fixed',
-    };
-    const ReactGridLayout = WidthProvider(RGL);
-
-    const [dataProcessed, setData] = useState(dataRaw);
-
-    const [layoutList, setLayoutList] = useState(dataProcessed.map((i)=>i.layout)) //layout defines the positions for each element.
-    const curLayout = layoutList
+    //can change to localstorage to save to local storage when layout changes.
+    //https://github.com/react-grid-layout/react-grid-layout/blob/master/test/examples/8-localstorage-responsive.jsx
+    const ReactGridLayout = WidthProvider(Responsive);
 
     const [currentData, setCurrentData] = useState({
-        keys: dataProcessed[0].keys,
-        data: dataProcessed[0].data,
+        keys: dataRaw[0].keys,
+        data: dataRaw[0].data,
     }); //holds the current data to display to the modal window. Since editing is done elsewhere this doesnt exactly need to be dynamic.
 
     const [showTableDialog, setShowTableDialog] = useState(false);
     const setTableDialogOpen = () => setShowTableDialog(true);
     const setTableDialogClose = () => setShowTableDialog(false);
 
+    const [activeData, setActiveData] = useState(dataRaw.filter(i=>i.active));
+    const [inactiveData, setInactiveData] = useState(dataRaw.filter(i=>!i.active));
+
+    const toggleActive = (item, isActive)=>{
+        var toAdd = item
+        toAdd.active = isActive
+        var prevActive = [...activeData]
+        var prevInactive = [...inactiveData]
+
+        if(isActive){
+            prevInactive.splice(prevInactive.findIndex(i => i.layout.i === item.layout.i), 1)
+            prevActive.push(toAdd)            
+        }else{
+            prevActive.splice(prevActive.findIndex(i => i.layout.i === item.layout.i), 1)
+            prevInactive.push(toAdd) 
+        }
+
+        setActiveData(prevActive)
+        setInactiveData(prevInactive)
+    }
+
+    const onDrop = (layout, layoutItem, _event) =>{
+        alert(`Dropped element props:\n${JSON.stringify(layoutItem, ['x', 'y', 'w', 'h'], 2)}`);
+        console.log(layout);
+        console.log(layoutItem);
+        console.log(_event);
+
+    }
+
+
     return (
         <div>
             {/* no need to provide additional constraints, nivo inherits the initial width defined in layout */}
-            {/* need to split this into components as well, getting a wee bit messy */}
-
+            {/* Regarding responsive grid layout
+                If using this, the entire layout system needs to be regenerated to provide different layouts for:
+                {lg: large screen, md: medium screen, sm: small screen, xxs: extra small screen}
+                and provided to ReactGridLayout through the "layouts" prop.
+                either that, or you have to provide the layout into the child elements.
+            */}
+            <div className="toolbar">
+            placeholder for drag n drop
+            Current inactive items:
+            {inactiveData.map((i)=>{
+                return(
+                    <div className="droppable-element" draggable="true" key={i.layout.i}>
+                        {i.chartName? i.chartName : "Untitled chart"} <Button onClick={()=>toggleActive(i, true)}>Add</Button>
+                    </div>
+                )
+            })}
+            </div>
             <ReactGridLayout
                 style={{border: '1px solid grey'}}
                 className="layout"
-                layout={curLayout}
-                cols={15} //the more rows and columns there are, the more division within the div to move around in.
+                cols={{lg: 12, md: 10, sm: 6, xs: 4, xxs: 2}}
                 rows={15}
                 rowHeight={100}
+                breakpoints={{lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0}}
                 width={1200}
+                isDroppable={true}
+                onDrop={onDrop} 
                 // onLayoutChange={(layout)=>{
                 //     if (layout !== layoutList) {
                 //         setLayoutList(layout)
@@ -836,9 +878,9 @@ function PrototypeGrid(props) {
                 //maybe send it to server than updating a stateful layout?
                 // draggableCancel="nonDraggable"
                 draggableHandle=".draggableHandle">
-                {dataRaw.map((i) => {
+                {activeData.map((i) => {
                     return (
-                        <div style={{border: '1px solid black'}} key={i.layout.i}>
+                        <div style={{border: '1px solid black'}} data-grid={i.layout} key={i.layout.i}>
                             <Tooltip title="Drag chart">
                                 <div
                                     id="handle"
@@ -868,7 +910,11 @@ function PrototypeGrid(props) {
                                     <TableChartIcon fontSize="inherit" />
                                 </Button>
                             </Tooltip>
-
+                            <Tooltip title="Remove chart">
+                              <Button size="medium" onClick={()=>toggleActive(i, false)} style={{"float": "right"}}>
+                                  <RemoveCircleIcon fontSize="inherit" />
+                              </Button>
+                            </Tooltip>
                             <Chart
                                 className="nonDraggable"
                                 data={i.data}

@@ -34,6 +34,8 @@ function AddChartModal(props) {
     const [curFile, setCurFile] = useState();
     const [curData, setCurData] = useState();
 
+    const [processedData, setProcessed] = useState();
+
     function onChange(e) {
         setCurFile(e.target.files[0]);
 
@@ -41,27 +43,34 @@ function AddChartModal(props) {
 
         reader.onload = (e) => {
             const bstr = e.target.result;
-
             var workbook = XLSX.read(bstr, {type: 'binary'});
-
             var sheetNames = workbook.SheetNames;
-
             var sheetIndex = 1;
 
-         setCurData(XLSX.utils.sheet_to_json(
+            var dataRaw = XLSX.utils.sheet_to_json(
                 workbook.Sheets[sheetNames[sheetIndex - 1]],
-            ));
+            )
+
+            setCurData(dataRaw)
+            console.log({keys: Object.keys(dataRaw[0]), data: dataRaw})
+
+            var processed = {keys: Object.keys(dataRaw[0]), data: dataRaw}
+
+            setProcessed(processed)
         };
 
         reader.readAsBinaryString(e.target.files[0]);
-        getKeys();
+        // getKeys();
     }
 
-    const getKeys = () =>{
-        if(typeof data !== 'undefined'){
-            setProcessed({data:{keys:Object.keys(curData[0]), data: curData}})
-        }
-    }
+    // const getKeys = () => {
+    //     if (typeof curData !== 'undefined') {
+    //         setProcessed({
+    //             data: {keys: Object.keys(curData[0]), data: curData},
+    //         });
+    //         console.log(processedData);
+    //     }
+    // };
 
     return (
         <div>
@@ -89,7 +98,7 @@ function AddChartModal(props) {
                             </FormHelperText>
                         </FormControl>
 
-                        {typeof curData !== 'undefined' ? (
+                        {typeof processedData !== 'undefined' ? (
                             <TableRender data={processedData} />
                         ) : (
                             <p>No table selected, please try again</p>

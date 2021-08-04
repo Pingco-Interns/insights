@@ -6,6 +6,7 @@ import '../node_modules/react-resizable/css/styles.css';
 import PrototypeGrid from './components/PrototypeGrid';
 import AddChart from './components/AddChart';
 import ReactQueryTrials from './components/ReactQueryTrials';
+import iframetest from './components/iframetest';
 
 import {BrowserRouter as Router, Switch, Route, Link} from 'react-router-dom';
 
@@ -24,6 +25,9 @@ function App() {
                         <li>
                             <Link to="/reactquery">React query</Link> |
                         </li>
+                        <li>
+                            <Link to="/iframetest">IFrame tests</Link>
+                        </li>
                     </nav>
                 </div>
 
@@ -33,6 +37,9 @@ function App() {
                     <Route exact path="/xlimport" component={AddChart}>
                     </Route>
                     <Route exact path="/reactquery" component={ReactQueryTrials}>
+                    </Route>
+                    <Route exact path="/iframetest" component={iframetest}>
+                        
                     </Route>
                 </Switch>
             </Router>
