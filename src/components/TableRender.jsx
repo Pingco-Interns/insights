@@ -29,7 +29,8 @@ function TableRender(props) {
                             return (
                                 <TableRow>
                                     <TableCell align="right">
-                                        {i.country}
+                                        {/* need a better way to do this.  */}
+                                        {i.country? i.country : i.Country}
                                     </TableCell>
                                     {props.data.keys.map((j) => {
                                         return (

@@ -31,14 +31,9 @@ function AddChartModal(props) {
     const setAddDialogOpen = () => setAddDialog(true);
     const setAddDialogClose = () => setAddDialog(false);
 
-    const [curFile, setCurFile] = useState();
-    const [curData, setCurData] = useState();
-
     const [processedData, setProcessed] = useState();
 
     function onChange(e) {
-        setCurFile(e.target.files[0]);
-
         const reader = new FileReader();
 
         reader.onload = (e) => {
@@ -51,11 +46,7 @@ function AddChartModal(props) {
                 workbook.Sheets[sheetNames[sheetIndex - 1]],
             )
 
-            setCurData(dataRaw)
-            console.log({keys: Object.keys(dataRaw[0]), data: dataRaw})
-
-            var processed = {keys: Object.keys(dataRaw[0]), data: dataRaw}
-
+            var processed = {keys: Object.keys(dataRaw[0]).slice(1), data: dataRaw}
             setProcessed(processed)
         };
 

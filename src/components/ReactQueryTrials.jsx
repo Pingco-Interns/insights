@@ -1,6 +1,5 @@
 import React from 'react';
 import {QueryClient, QueryClientProvider, useQuery} from 'react-query';
-import {BrowserRouter as Router, Switch, Route, Link} from 'react-router-dom';
 
 //create a new client
 const queryClient = new QueryClient();

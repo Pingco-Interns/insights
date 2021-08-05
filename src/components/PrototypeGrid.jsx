@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import RGL, {WidthProvider, Responsive} from 'react-grid-layout';
+import {WidthProvider, Responsive} from 'react-grid-layout';
 
 import Chart from './Chart';
 import AddChartModal from './AddChartModal';
@@ -16,7 +16,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-import { Tooltip } from '@material-ui/core';
+import {Tooltip} from '@material-ui/core';
 
 //Need to show modal and dialog windows with the table here. If not, it'll be constrainted to the chart's div and not to the viewport.
 
@@ -135,29 +135,29 @@ const dataRaw = [
         ],
         keys: ['hot dog', 'burger', 'sandwich', 'kebab', 'fries', 'donut'],
         indexBy: 'country',
-        layout: {i: 'a', x: 1, y: 0, w: 3, h: 3, minW: 3, minH:3 },
+        layout: {i: 'a', x: 1, y: 0, w: 3, h: 3, minW: 3, minH: 3},
         active: true,
         options: {
-            colors: "nivo",
+            colors: 'nivo',
             defs: [
                 {
-                  id: "dots",
-                  type: "patternDots",
-                  background: "inherit",
-                  color: "#38bcb2",
-                  size: 4,
-                  padding: 1,
-                  stagger: true,
+                    id: 'dots',
+                    type: 'patternDots',
+                    background: 'inherit',
+                    color: '#38bcb2',
+                    size: 4,
+                    padding: 1,
+                    stagger: true,
                 },
                 {
-                  id: "lines",
-                  type: "patternLines",
-                  background: "inherit",
-                  color: "#eed312",
-                  rotation: -45,
-                  lineWidth: 6,
-                  spacing: 10,
-                }
+                    id: 'lines',
+                    type: 'patternLines',
+                    background: 'inherit',
+                    color: '#eed312',
+                    rotation: -45,
+                    lineWidth: 6,
+                    spacing: 10,
+                },
             ],
             fill: [
                 //Colours specific ones differently.
@@ -174,11 +174,11 @@ const dataRaw = [
                     id: 'lines',
                 },
             ],
-            legends: "keys",
-            anchor: "bottom-right"
+            legends: 'keys',
+            anchor: 'bottom-right',
         },
-        chartName: "Chart 1 custom name, index is 'a'"
-    },    
+        chartName: "Chart 1 custom name, index is 'a'",
+    },
     {
         data: [
             {
@@ -289,29 +289,29 @@ const dataRaw = [
         ],
         keys: ['hot dog', 'burger', 'sandwich', 'kebab', 'fries', 'donut'],
         indexBy: 'country',
-        layout: {i: 'b', x: 2, y: 0, w: 3, h: 3, minW: 3, minH:3},
+        layout: {i: 'b', x: 2, y: 0, w: 3, h: 3, minW: 3, minH: 3},
         active: true,
         options: {
-            colors: "pastel1",
+            colors: 'pastel1',
             defs: [
                 {
-                  id: "dots",
-                  type: "patternDots",
-                  background: "inherit",
-                  color: "#38bcb2",
-                  size: 4,
-                  padding: 1,
-                  stagger: true,
+                    id: 'dots',
+                    type: 'patternDots',
+                    background: 'inherit',
+                    color: '#38bcb2',
+                    size: 4,
+                    padding: 1,
+                    stagger: true,
                 },
                 {
-                  id: "lines",
-                  type: "patternLines",
-                  background: "inherit",
-                  color: "#eed312",
-                  rotation: -45,
-                  lineWidth: 6,
-                  spacing: 10,
-                }
+                    id: 'lines',
+                    type: 'patternLines',
+                    background: 'inherit',
+                    color: '#eed312',
+                    rotation: -45,
+                    lineWidth: 6,
+                    spacing: 10,
+                },
             ],
             fill: [
                 //Colours specific ones differently.
@@ -328,10 +328,10 @@ const dataRaw = [
                     id: 'lines',
                 },
             ],
-            legends: "keys",
-            anchor: "bottom-right"
-        }
-    },    
+            legends: 'keys',
+            anchor: 'bottom-right',
+        },
+    },
     {
         data: [
             {
@@ -442,29 +442,29 @@ const dataRaw = [
         ],
         keys: ['hot dog', 'burger', 'sandwich', 'kebab', 'fries', 'donut'],
         indexBy: 'country',
-        layout: {i: 'c', x: 0, y: 1, w: 3, h: 3, minW: 3, minH:3},
+        layout: {i: 'c', x: 0, y: 1, w: 3, h: 3, minW: 3, minH: 3},
         active: true,
         options: {
-            colors: "blues",
+            colors: 'blues',
             defs: [
                 {
-                  id: "dots",
-                  type: "patternDots",
-                  background: "inherit",
-                  color: "#38bcb2",
-                  size: 4,
-                  padding: 1,
-                  stagger: true,
+                    id: 'dots',
+                    type: 'patternDots',
+                    background: 'inherit',
+                    color: '#38bcb2',
+                    size: 4,
+                    padding: 1,
+                    stagger: true,
                 },
                 {
-                  id: "lines",
-                  type: "patternLines",
-                  background: "inherit",
-                  color: "#eed312",
-                  rotation: -45,
-                  lineWidth: 6,
-                  spacing: 10,
-                }
+                    id: 'lines',
+                    type: 'patternLines',
+                    background: 'inherit',
+                    color: '#eed312',
+                    rotation: -45,
+                    lineWidth: 6,
+                    spacing: 10,
+                },
             ],
             fill: [
                 //Colours specific ones differently.
@@ -481,11 +481,11 @@ const dataRaw = [
                     id: 'lines',
                 },
             ],
-            legends: "keys",
-            anchor: "bottom-right"
+            legends: 'keys',
+            anchor: 'bottom-right',
         },
-        chartName: "Another custom chart name, for chart 'c'"
-    },    
+        chartName: "Another custom chart name, for chart 'c'",
+    },
     {
         data: [
             {
@@ -596,29 +596,29 @@ const dataRaw = [
         ],
         keys: ['hot dog', 'burger', 'sandwich', 'kebab', 'fries', 'donut'],
         indexBy: 'country',
-        layout: {i: 'd', x: 0, y: 2, w: 3, h: 3, minW: 3, minH:3},
+        layout: {i: 'd', x: 0, y: 2, w: 3, h: 3, minW: 3, minH: 3},
         active: false,
         options: {
-            colors: "oranges",
+            colors: 'oranges',
             defs: [
                 {
-                  id: "dots",
-                  type: "patternDots",
-                  background: "inherit",
-                  color: "#38bcb2",
-                  size: 4,
-                  padding: 1,
-                  stagger: true,
+                    id: 'dots',
+                    type: 'patternDots',
+                    background: 'inherit',
+                    color: '#38bcb2',
+                    size: 4,
+                    padding: 1,
+                    stagger: true,
                 },
                 {
-                  id: "lines",
-                  type: "patternLines",
-                  background: "inherit",
-                  color: "#eed312",
-                  rotation: -45,
-                  lineWidth: 6,
-                  spacing: 10,
-                }
+                    id: 'lines',
+                    type: 'patternLines',
+                    background: 'inherit',
+                    color: '#eed312',
+                    rotation: -45,
+                    lineWidth: 6,
+                    spacing: 10,
+                },
             ],
             fill: [
                 //Colours specific ones differently.
@@ -635,10 +635,10 @@ const dataRaw = [
                     id: 'lines',
                 },
             ],
-            legends: "keys",
-            anchor: "bottom-right"
-        }
-    },    
+            legends: 'keys',
+            anchor: 'bottom-right',
+        },
+    },
     {
         data: [
             {
@@ -749,29 +749,29 @@ const dataRaw = [
         ],
         keys: ['hot dog', 'burger', 'sandwich', 'kebab', 'fries', 'donut'],
         indexBy: 'country',
-        layout: {i: 'e', x: 2, y: 2, w: 5, h: 5, minW: 3, minH:3},
+        layout: {i: 'e', x: 2, y: 2, w: 5, h: 5, minW: 3, minH: 3},
         active: false,
         options: {
-            colors: "dark2",
+            colors: 'dark2',
             defs: [
                 {
-                  id: "dots",
-                  type: "patternDots",
-                  background: "inherit",
-                  color: "#38bcb2",
-                  size: 4,
-                  padding: 1,
-                  stagger: true,
+                    id: 'dots',
+                    type: 'patternDots',
+                    background: 'inherit',
+                    color: '#38bcb2',
+                    size: 4,
+                    padding: 1,
+                    stagger: true,
                 },
                 {
-                  id: "lines",
-                  type: "patternLines",
-                  background: "inherit",
-                  color: "#eed312",
-                  rotation: -45,
-                  lineWidth: 6,
-                  spacing: 10,
-                }
+                    id: 'lines',
+                    type: 'patternLines',
+                    background: 'inherit',
+                    color: '#eed312',
+                    rotation: -45,
+                    lineWidth: 6,
+                    spacing: 10,
+                },
             ],
             fill: [
                 //Colours specific ones differently.
@@ -788,10 +788,10 @@ const dataRaw = [
                     id: 'lines',
                 },
             ],
-            legends: "keys",
-            anchor: "bottom-right"
-        }
-    }
+            legends: 'keys',
+            anchor: 'bottom-right',
+        },
+    },
 ];
 
 //I have a const outside of the component ^ that gives the raw data, which is then loaded into a state and used to render the charts
@@ -809,35 +809,55 @@ function PrototypeGrid(props) {
     const setTableDialogOpen = () => setShowTableDialog(true);
     const setTableDialogClose = () => setShowTableDialog(false);
 
-    const [activeData, setActiveData] = useState(dataRaw.filter(i=>i.active));
-    const [inactiveData, setInactiveData] = useState(dataRaw.filter(i=>!i.active));
+    const [activeData, setActiveData] = useState(
+        dataRaw.filter((i) => i.active),
+    );
+    const [inactiveData, setInactiveData] = useState(
+        dataRaw.filter((i) => !i.active),
+    );
 
-    const toggleActive = (item, isActive)=>{
-        var toAdd = item
-        toAdd.active = isActive
-        var prevActive = [...activeData]
-        var prevInactive = [...inactiveData]
+    const toggleActive = (item, isActive, layout) => {
+        var toAdd = item;
+        toAdd.active = isActive;
+        var prevActive = [...activeData];
+        var prevInactive = [...inactiveData];
 
-        if(isActive){
-            prevInactive.splice(prevInactive.findIndex(i => i.layout.i === item.layout.i), 1)
-            prevActive.push(toAdd)            
-        }else{
-            prevActive.splice(prevActive.findIndex(i => i.layout.i === item.layout.i), 1)
-            prevInactive.push(toAdd) 
+        if (isActive) {
+            prevInactive.splice(
+                prevInactive.findIndex((i) => i.layout.i === item.layout.i),
+                1,
+            );
+            prevActive.push(toAdd);
+        } else {
+            prevActive.splice(
+                prevActive.findIndex((i) => i.layout.i === item.layout.i),
+                1,
+            );
+            prevInactive.push(toAdd);
         }
 
-        setActiveData(prevActive)
-        setInactiveData(prevInactive)
-    }
+        setActiveData(prevActive);
+        setInactiveData(prevInactive);
+    };
 
-    const onDrop = (layout, layoutItem, _event) =>{
-        alert(`Dropped element props:\n${JSON.stringify(layoutItem, ['x', 'y', 'w', 'h'], 2)}`);
-        console.log(layout);
-        console.log(layoutItem);
-        console.log(_event);
+    const onDrop = (layout, layoutItem, _event) => {
+        // alert(`Dropped element props:\n${JSON.stringify(layoutItem, ['x', 'y', 'w', 'h'], 2)}`);
+        _event.preventDefault();
+        const data = _event.dataTransfer.getData('text');
+        const item = inactiveData[data];
 
-    }
-
+        item.layout = {
+            i: item.layout.i,
+            x: layoutItem.x,
+            y: layoutItem.y,
+            w: 3,
+            h: 3,
+            minW: 3,
+            minH: 3,
+        };
+        console.log(item);
+        toggleActive(item, true);
+    };
 
     return (
         <div>
@@ -849,15 +869,31 @@ function PrototypeGrid(props) {
                 either that, or you have to provide the layout into the child elements.
             */}
             <div className="toolbar">
-            placeholder for drag n drop
-            Current inactive items:
-            {inactiveData.map((i)=>{
-                return(
-                    <div className="droppable-element" draggable="true" key={i.layout.i}>
-                        {i.chartName? i.chartName : "Untitled chart"} <Button onClick={()=>toggleActive(i, true)}>Add</Button>
-                    </div>
-                )
-            })}
+                {inactiveData.map((i, index) => {
+                    return (
+                        <div
+                            className="droppable-element"
+                            draggable="true"
+                            style={{
+                                width: '400px',
+                                padding: '5px',
+                                backgroundColor: 'grey',
+                                margin: '2px',
+                                border: '1px solid white;',
+                            }}
+                            onDragStart={(e) =>
+                                e.dataTransfer.setData('text', index)
+                            }
+                            id="testing"
+                            itemProp={i}
+                            key={i.layout.i}>
+                            {i.chartName ? i.chartName : 'Untitled chart'}{' '}
+                            <Button onClick={() => toggleActive(i, true)}>
+                                Add
+                            </Button>
+                        </div>
+                    );
+                })}
             </div>
             <ReactGridLayout
                 style={{border: '1px solid grey'}}
@@ -868,19 +904,14 @@ function PrototypeGrid(props) {
                 breakpoints={{lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0}}
                 width={1200}
                 isDroppable={true}
-                onDrop={onDrop} 
-                // onLayoutChange={(layout)=>{
-                //     if (layout !== layoutList) {
-                //         setLayoutList(layout)
-                //     } 
-                // }} 
-                //need to figure out a good way to save layouts. using state results in it rerendering from scratch every time its updated.
-                //maybe send it to server than updating a stateful layout?
-                // draggableCancel="nonDraggable"
+                onDrop={onDrop}
                 draggableHandle=".draggableHandle">
                 {activeData.map((i) => {
                     return (
-                        <div style={{border: '1px solid black'}} data-grid={i.layout} key={i.layout.i}>
+                        <div
+                            style={{border: '1px solid black'}}
+                            data-grid={i.layout}
+                            key={i.layout.i}>
                             <Tooltip title="Drag chart">
                                 <div
                                     id="handle"
@@ -894,7 +925,9 @@ function PrototypeGrid(props) {
                                         cursor: 'pointer',
                                     }}>
                                     <DragHandleIcon />
-                                    {i.chartName? i.chartName : "Untitled chart"}
+                                    {i.chartName
+                                        ? i.chartName
+                                        : 'Untitled chart'}
                                 </div>
                             </Tooltip>
                             <Tooltip title="Show table">
@@ -911,9 +944,12 @@ function PrototypeGrid(props) {
                                 </Button>
                             </Tooltip>
                             <Tooltip title="Remove chart">
-                              <Button size="medium" onClick={()=>toggleActive(i, false)} style={{"float": "right"}}>
-                                  <RemoveCircleIcon fontSize="inherit" />
-                              </Button>
+                                <Button
+                                    size="medium"
+                                    onClick={() => toggleActive(i, false)}
+                                    style={{float: 'right'}}>
+                                    <RemoveCircleIcon fontSize="inherit" />
+                                </Button>
                             </Tooltip>
                             <Chart
                                 className="nonDraggable"
@@ -929,7 +965,7 @@ function PrototypeGrid(props) {
                     );
                 })}
             </ReactGridLayout>
-            
+
             <Dialog open={showTableDialog} onClose={setTableDialogClose}>
                 <DialogTitle id="form-dialog-title">Chart Details</DialogTitle>
                 <DialogContent>
@@ -943,9 +979,8 @@ function PrototypeGrid(props) {
                 </DialogActions>
             </Dialog>
             <AddChartModal />
-
         </div>
     );
 }
 
-export default PrototypeGrid;
+export default React.memo(PrototypeGrid);
