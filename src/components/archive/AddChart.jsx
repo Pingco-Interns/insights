@@ -1,3 +1,5 @@
+// first draft of data imports. dont use this cos it will break
+
 import React, { useState } from 'react'
 import FormControl from '@material-ui/core/FormControl'
 import FormHelperText from '@material-ui/core/FormHelperText'
@@ -5,8 +7,6 @@ import FormLabel from '@material-ui/core/FormLabel'
 import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
 import XLSX from 'xlsx';
-
-
 
 const AddChart = (props)=>{
 

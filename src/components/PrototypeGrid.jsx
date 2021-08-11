@@ -16,9 +16,13 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-import {Tooltip} from '@material-ui/core';
+import {Tooltip, Grid, Snackbar, IconButton} from '@material-ui/core';
+import {Close as CloseIcon} from '@material-ui/icons';
 
-//Need to show modal and dialog windows with the table here. If not, it'll be constrainted to the chart's div and not to the viewport.
+import Accordion from '@material-ui/core/Accordion';
+import AccordionSummary from '@material-ui/core/AccordionSummary';
+import Typography from '@material-ui/core/Typography';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 const dataRaw = [
     //Maybe this can be processed in the backend? front end can do processing too, with some templated/default values.
@@ -796,13 +800,15 @@ const dataRaw = [
 
 //I have a const outside of the component ^ that gives the raw data, which is then loaded into a state and used to render the charts
 function PrototypeGrid(props) {
+    //#region
     //can change to localstorage to save to local storage when layout changes.
     //https://github.com/react-grid-layout/react-grid-layout/blob/master/test/examples/8-localstorage-responsive.jsx
     const ReactGridLayout = WidthProvider(Responsive);
+    const [dataState, setDataState] = useState(dataRaw);
 
     const [currentData, setCurrentData] = useState({
-        keys: dataRaw[0].keys,
-        data: dataRaw[0].data,
+        keys: dataState[0].keys,
+        data: dataState[0].data,
     }); //holds the current data to display to the modal window. Since editing is done elsewhere this doesnt exactly need to be dynamic.
 
     const [showTableDialog, setShowTableDialog] = useState(false);
@@ -810,10 +816,10 @@ function PrototypeGrid(props) {
     const setTableDialogClose = () => setShowTableDialog(false);
 
     const [activeData, setActiveData] = useState(
-        dataRaw.filter((i) => i.active),
+        dataState.filter((i) => i.active),
     );
     const [inactiveData, setInactiveData] = useState(
-        dataRaw.filter((i) => !i.active),
+        dataState.filter((i) => !i.active),
     );
 
     const toggleActive = (item, isActive, layout) => {
@@ -840,8 +846,20 @@ function PrototypeGrid(props) {
         setInactiveData(prevInactive);
     };
 
+    const handleCallback = (childData) => {
+        var prev = [...dataState];
+        prev.push(childData);
+
+        setDataState(prev);
+
+        toggleActive(childData, false);
+        console.log(childData);
+    };
+    const [showSnackbar, setSnackbar] = useState(false);
+    const openSnackbar = () => setSnackbar(true);
+    const closeSnackbar = () => setSnackbar(false);
+
     const onDrop = (layout, layoutItem, _event) => {
-        // alert(`Dropped element props:\n${JSON.stringify(layoutItem, ['x', 'y', 'w', 'h'], 2)}`);
         _event.preventDefault();
         const data = _event.dataTransfer.getData('text');
         const item = inactiveData[data];
@@ -858,6 +876,7 @@ function PrototypeGrid(props) {
         console.log(item);
         toggleActive(item, true);
     };
+    //#endregion
 
     return (
         <div>
@@ -868,108 +887,171 @@ function PrototypeGrid(props) {
                 and provided to ReactGridLayout through the "layouts" prop.
                 either that, or you have to provide the layout into the child elements.
             */}
-            <div className="toolbar">
-                {inactiveData.map((i, index) => {
-                    return (
-                        <div
-                            className="droppable-element"
-                            draggable="true"
-                            style={{
-                                width: '400px',
-                                padding: '5px',
-                                backgroundColor: 'grey',
-                                margin: '2px',
-                                border: '1px solid white;',
-                            }}
-                            onDragStart={(e) =>
-                                e.dataTransfer.setData('text', index)
-                            }
-                            id="testing"
-                            itemProp={i}
-                            key={i.layout.i}>
-                            {i.chartName ? i.chartName : 'Untitled chart'}{' '}
-                            <Button onClick={() => toggleActive(i, true)}>
-                                Add
-                            </Button>
-                        </div>
-                    );
-                })}
-            </div>
-            <ReactGridLayout
-                style={{border: '1px solid grey'}}
-                className="layout"
-                cols={{lg: 12, md: 10, sm: 6, xs: 4, xxs: 2}}
-                rows={15}
-                rowHeight={100}
-                breakpoints={{lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0}}
-                width={1200}
-                isDroppable={true}
-                onDrop={onDrop}
-                draggableHandle=".draggableHandle">
-                {activeData.map((i) => {
-                    return (
-                        <div
-                            style={{border: '1px solid black'}}
-                            data-grid={i.layout}
-                            key={i.layout.i}>
-                            <Tooltip title="Drag chart">
+            <Button onClick={openSnackbar}>snack</Button>
+            <Grid container spacing={3}>
+                <Grid item xs={2}>
+                    <Accordion>
+                        <AccordionSummary
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls="panel2a-content"
+                            id="panel2a-header">
+                            <Typography>
+                                {inactiveData.length} Disabled reports
+                            </Typography>
+                        </AccordionSummary>
+                        {inactiveData.map((i, index) => {
+                            return (
                                 <div
-                                    id="handle"
-                                    className="draggableHandle"
+                                    className="droppable-element"
+                                    draggable="true"
                                     style={{
-                                        textAlign: 'center',
-                                        backgroundColor: 'lightgray',
-                                        minWidth: '100%',
-                                        minHeight: '25px',
-                                        position: 'fixed',
+                                        width: 'inherit',
+                                        padding: '5px',
+                                        backgroundColor: 'darkgrey',
+                                        margin: '2px',
+                                        border: '1px solid white;',
                                         cursor: 'pointer',
-                                    }}>
-                                    <DragHandleIcon />
+                                        borderRadius: '5px',
+                                    }}
+                                    onDragStart={(e) =>
+                                        e.dataTransfer.setData('text', index)
+                                    }
+                                    id="testing"
+                                    itemProp={i}
+                                    key={i.layout.i}>
                                     {i.chartName
                                         ? i.chartName
                                         : 'Untitled chart'}
                                 </div>
-                            </Tooltip>
-                            <Tooltip title="Show table">
-                                <Button
-                                    size="medium"
-                                    onClick={(e) => {
-                                        setTableDialogOpen();
-                                        setCurrentData({
-                                            keys: i.keys,
-                                            data: i.data,
-                                        });
-                                    }}>
-                                    <TableChartIcon fontSize="inherit" />
-                                </Button>
-                            </Tooltip>
-                            <Tooltip title="Remove chart">
-                                <Button
-                                    size="medium"
-                                    onClick={() => toggleActive(i, false)}
-                                    style={{float: 'right'}}>
-                                    <RemoveCircleIcon fontSize="inherit" />
-                                </Button>
-                            </Tooltip>
-                            <Chart
-                                className="nonDraggable"
-                                data={i.data}
-                                keys={i.keys}
-                                indexBy={i.indexBy}
-                                layout={i.layout}
-                                legendLeft={i.legendLeft}
-                                legendBottom={i.legendBottom}
-                                options={i.options}
-                            />
-                        </div>
-                    );
-                })}
-            </ReactGridLayout>
+                            );
+                        })}
+                    </Accordion>
+                    <Accordion>
+                        <AccordionSummary
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls="panel1a-content"
+                            id="panel1a-header">
+                            <Typography>
+                                {activeData.length} Enabled reports
+                            </Typography>
+                        </AccordionSummary>
+                        {activeData.map((i, index) => {
+                            return (
+                                <div
+                                    className="droppable-element"
+                                    style={{
+                                        width: 'inherit',
+                                        padding: '5px',
+                                        backgroundColor: 'lightblue',
+                                        margin: '2px',
+                                        border: '1px solid white;',
+                                        cursor: 'pointer',
+                                        borderRadius: '5px',
+                                    }}
+
+                                    id="testing"
+                                    itemProp={i}
+                                    key={i.layout.i}>
+                                    {i.chartName
+                                        ? i.chartName
+                                        : 'Untitled chart'}
+                                </div>
+                            );
+                        })}
+                    </Accordion>
+                </Grid>
+                <Grid item xs={10}>
+                    <ReactGridLayout
+                        style={{border: '1px solid grey', minHeight: '500px'}}
+                        className="layout"
+                        cols={{lg: 12, md: 10, sm: 6, xs: 4, xxs: 2}}
+                        rows={15}
+                        rowHeight={100}
+                        breakpoints={{
+                            lg: 1200,
+                            md: 996,
+                            sm: 768,
+                            xs: 480,
+                            xxs: 0,
+                        }}
+                        width={1200}
+                        isDroppable={true}
+                        onDrop={onDrop}
+                        draggableHandle=".draggableHandle">
+                        {activeData.map((i) => {
+                            return (
+                                <div
+                                    style={{
+                                        border: '1px solid black',
+                                        borderRadius: '4px',
+                                    }}
+                                    data-grid={i.layout}
+                                    key={i.layout.i}>
+                                    <Tooltip title="Drag chart">
+                                        <div
+                                            id="handle"
+                                            className="draggableHandle"
+                                            style={{
+                                                textAlign: 'center',
+                                                backgroundColor: 'lightblue',
+                                                minWidth: '100%',
+                                                minHeight: '25px',
+                                                position: 'fixed',
+                                                cursor: 'pointer',
+                                                borderTopLeftRadius: '4px',
+                                                borderTopRightRadius: '4px',
+                                            }}>
+                                            <DragHandleIcon fontSize="inherit" />
+                                            {i.chartName
+                                                ? i.chartName
+                                                : 'Untitled chart'}
+                                        </div>
+                                    </Tooltip>
+                                    <Tooltip title="Show table">
+                                        <Button
+                                            size="medium"
+                                            onClick={(e) => {
+                                                setTableDialogOpen();
+                                                setCurrentData({
+                                                    keys: i.keys,
+                                                    data: i.data,
+                                                    chartName: i.chartName ? i.chartName : 'Untitled chart'
+                                                });
+                                            }}>
+                                            <TableChartIcon fontSize="inherit" />
+                                        </Button>
+                                    </Tooltip>
+                                    <Tooltip title="Remove chart">
+                                        <Button
+                                            size="medium"
+                                            onClick={() =>
+                                                toggleActive(i, false)
+                                            }
+                                            style={{float: 'right'}}>
+                                            <RemoveCircleIcon fontSize="inherit" />
+                                        </Button>
+                                    </Tooltip>
+                                    <Chart
+                                        className="nonDraggable"
+                                        data={i.data}
+                                        keys={i.keys}
+                                        indexBy={i.indexBy}
+                                        layout={i.layout}
+                                        legendLeft={i.legendLeft}
+                                        legendBottom={i.legendBottom}
+                                        options={i.options}
+                                    />
+                                </div>
+                            );
+                        })}
+                    </ReactGridLayout>
+                </Grid>
+            </Grid>
 
             <Dialog open={showTableDialog} onClose={setTableDialogClose}>
-                <DialogTitle id="form-dialog-title">Chart Details</DialogTitle>
+                <DialogTitle id="form-dialog-title">Chart data</DialogTitle>
                 <DialogContent>
-                    <DialogContentText>Chart data:</DialogContentText>
+                    <DialogContentText>Chart data of <b>"{currentData.chartName}"</b></DialogContentText>
                     <TableRender data={currentData} />
                 </DialogContent>
                 <DialogActions>
@@ -978,7 +1060,27 @@ function PrototypeGrid(props) {
                     </Button>
                 </DialogActions>
             </Dialog>
-            <AddChartModal />
+
+            <AddChartModal parentCallback={handleCallback} />
+
+            <Snackbar
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'center',
+                }}
+                open={showSnackbar}
+                onClose={closeSnackbar}
+                message="Delete"
+                action={
+                    <IconButton
+                        size="small"
+                        aria-label="close"
+                        color="inherit"
+                        onClick={closeSnackbar}>
+                        <CloseIcon fontSize="small" />
+                    </IconButton>
+                }
+            />
         </div>
     );
 }

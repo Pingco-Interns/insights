@@ -1,12 +1,13 @@
 import React from 'react';
-import {ResponsiveBar} from '@nivo/bar';
+import {ResponsiveBarCanvas} from '@nivo/bar';
 import PropTypes from 'prop-types';
 
 //try to get the chart stuff in a responsive grid
 function Chart(props) {
+    
     return (
         <>
-            <ResponsiveBar
+            <ResponsiveBarCanvas
                 data={props.data}
                 keys={props.keys}
                 indexBy={props.indexBy}
@@ -22,47 +23,47 @@ function Chart(props) {
                 axisTop={null}
                 axisRight={null}
                 axisBottom={{
-                  tickSize: 5,
-                  tickPadding: 5,
-                  tickRotation: 0,
-                  legend: props.legendRight,
-                  legendPosition: 'middle',
-                  legendOffset: 32,
-              }}
+                    tickSize: 5,
+                    tickPadding: 5,
+                    tickRotation: 0,
+                    legend: props.legendRight,
+                    legendPosition: 'middle',
+                    legendOffset: 32,
+                }}
                 axisLeft={{
-                  tickSize: 5,
-                  tickPadding: 5,
-                  tickRotation: 0,
-                  legend: props.legendLeft,
-                  legendPosition: 'middle',
-                  legendOffset: -40,
-              }}
+                    tickSize: 5,
+                    tickPadding: 5,
+                    tickRotation: 0,
+                    legend: props.legendLeft,
+                    legendPosition: 'middle',
+                    legendOffset: -40,
+                }}
                 labelSkipWidth={12}
                 labelSkipHeight={12}
-                labelTextColor={{from: 'color', modifiers: [['darker', 1.6]]}}
+                // labelTextColor={{from: 'color', modifiers: [['darker', 1.6]]}}
                 legends={[
-                  {
-                    dataFrom: props.options.legends,
-                    anchor: props.options.anchor,
-                    direction: "column",
-                    justify: false,
-                    translateX: 120,
-                    translateY: 0,
-                    itemsSpacing: 2,
-                    itemWidth: 100,
-                    itemHeight: 20,
-                    itemDirection: "left-to-right",
-                    itemOpacity: 0.85,
-                    symbolSize: 20,
-                    effects: [
-                      {
-                        on: "hover",
-                        style: {
-                          itemOpacity: 1,
-                        },
-                      },
-                    ],
-                  },
+                    {
+                        dataFrom: props.options.legends,
+                        anchor: props.options.anchor,
+                        direction: 'column',
+                        justify: false,
+                        translateX: 120,
+                        translateY: 0,
+                        itemsSpacing: 2,
+                        itemWidth: 100,
+                        itemHeight: 20,
+                        itemDirection: 'left-to-right',
+                        itemOpacity: 0.85,
+                        symbolSize: 20,
+                        effects: [
+                            {
+                                on: 'hover',
+                                style: {
+                                    itemOpacity: 1,
+                                },
+                            },
+                        ],
+                    },
                 ]}
             />
         </>
@@ -122,6 +123,7 @@ Chart.propTypes = {
             'yellow_orange_brown',
             'yellow_orange_red',
         ]),
+        custom: PropTypes.object,
         defs: PropTypes.arrayOf(PropTypes.object),
         fill: PropTypes.arrayOf(PropTypes.object),
         legends: PropTypes.string,
