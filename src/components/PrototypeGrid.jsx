@@ -15,7 +15,6 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-
 import {Tooltip, Grid, Snackbar, IconButton} from '@material-ui/core';
 import {Close as CloseIcon} from '@material-ui/icons';
 
@@ -888,7 +887,7 @@ function PrototypeGrid(props) {
                 either that, or you have to provide the layout into the child elements.
             */}
             <Button onClick={openSnackbar}>snack</Button>
-            <Grid container spacing={3}>
+            <Grid container spacing={1}>
                 <Grid item xs={2}>
                     <Accordion>
                         <AccordionSummary

@@ -231,7 +231,7 @@ function AddChartModal(props) {
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={saveCurrent} color="default">
+                    <Button onClick={saveCurrent} disabled={processedData ? false : true} color="default">
                         Save
                     </Button>
                     <Button onClick={setAddDialogClose} color="default">
