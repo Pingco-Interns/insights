@@ -4,6 +4,24 @@ import PropTypes from 'prop-types';
 
 //try to get the chart stuff in a responsive grid
 function Chart(props) {
+    // var colors;
+    // if (props.options.setting === 'theme') {
+    //     colors = {scheme : props.options.colors.toString()}
+    // } else if(props.options.setting === 'custom') {
+    //     props.options.custom.map((i) => (colors[i.id] = i.color)); 
+    // }
+
+    // console.log({["Colors object"]: colors, setting: props.options.setting, props: props.options})
+
+    var _colors = {}
+
+    if (props.options.setting === 'custom') {
+        props.options.custom.map((i) => (_colors[i.id] = i.color));
+    }else if(props.options.setting === 'theme'){
+        _colors = {scheme: props.options.colors.toString()}
+    }
+
+    const getColor = bar => _colors[bar.id]
     
     return (
         <>
@@ -16,12 +34,13 @@ function Chart(props) {
                 valueScale={{type: 'linear'}}
                 indexScale={{type: 'band', round: true}}
                 valueFormat={{format: '', enabled: false}}
-                colors={{scheme: props.options.colors.toString()}}
+                colors={props.options.setting === "custom" ? getColor : {scheme: props.options.colors.toString()}}
                 defs={props.options.defs}
                 fill={props.options.fill}
                 borderColor={{from: 'color', modifiers: [['darker', 1.6]]}}
                 axisTop={null}
                 axisRight={null}
+                groupMode={props.options.groupMode}
                 axisBottom={{
                     tickSize: 5,
                     tickPadding: 5,
@@ -83,6 +102,7 @@ Chart.propTypes = {
     }),
     legendLeft: PropTypes.string,
     legendBottom: PropTypes.string,
+    filters: PropTypes.arrayOf(PropTypes.object),
     options: PropTypes.exact({
         colors: PropTypes.oneOf([
             'nivo',
@@ -123,7 +143,7 @@ Chart.propTypes = {
             'yellow_orange_brown',
             'yellow_orange_red',
         ]),
-        custom: PropTypes.object,
+        custom: PropTypes.array,
         defs: PropTypes.arrayOf(PropTypes.object),
         fill: PropTypes.arrayOf(PropTypes.object),
         legends: PropTypes.string,
@@ -138,6 +158,8 @@ Chart.propTypes = {
             'bottom',
             'bottom-right',
         ]),
+        setting: PropTypes.string,
+        groupMode: PropTypes.oneOf(['grouped', 'stacked']),
     }),
 };
 

@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import Chart from './Chart';
 
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -16,9 +15,14 @@ import Button from '@material-ui/core/Button';
 
 import TableRender from './TableRender';
 import FormControl from '@material-ui/core/FormControl';
-import FormHelperText from '@material-ui/core/FormHelperText';
 import FormLabel from '@material-ui/core/FormLabel';
 import XLSX from 'xlsx';
+import Switch from '@material-ui/core/Switch';
+import Divider from '@material-ui/core/Divider';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Radio from '@material-ui/core/Radio';
+import Typography from '@material-ui/core/Typography';
 
 function AddChartModal(props) {
     const butStyle = {
@@ -73,23 +77,25 @@ function AddChartModal(props) {
         'yellow_orange_brown',
         'yellow_orange_red',
     ];
+
     const [chartTheme, setChartTheme] = useState('nivo');
-
-    // const anchorArray = [
-    //     'top-left',
-    //     'top',
-    //     'top-right',
-    //     'left',
-    //     'center',
-    //     'right',
-    //     'bottom-left',
-    //     'bottom',
-    //     'bottom-right',
-    // ];
-
+    const [fileName, setFileName] = useState('');
     const [chartName, setChartName] = useState('');
+    const [colorSetting, setColorSetting] = useState('theme');
+    const [customColors, setCustom] = useState([{}]);
+
+    const modifyCustom = (item, newColor) => {
+        var index = customColors.findIndex(x=> x.id===item.id)
+        if(index !== -1){
+            var temp = customColors.slice();
+            temp[index].color = newColor;
+            setCustom(temp)
+        }
+    };
 
     const [processedData, setProcessed] = useState();
+
+    const [groupChecked, setGrouped] = useState(false);
 
     function genString(length) {
         var result = '';
@@ -103,9 +109,29 @@ function AddChartModal(props) {
         }
         return result;
     }
+    function randColor() {
+        var letters = '0123456789ABCDEF';
+        var color = '#';
+        for (var i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
+    
+    function clearState(){
+        setChartTheme('nivo')
+        setFileName('')
+        setColorSetting('theme')
+        setCustom([{}])
+        setProcessed()
+        setGrouped(false)
+    }
 
     function onChange(e) {
         const reader = new FileReader();
+        const filename = e.target.files[0].name;
+
+        setFileName(filename);
 
         reader.onload = (e) => {
             const bstr = e.target.result;
@@ -116,6 +142,10 @@ function AddChartModal(props) {
             var dataRaw = XLSX.utils.sheet_to_json(
                 workbook.Sheets[sheetNames[sheetIndex - 1]],
             );
+            var toAdd = Object.keys(dataRaw[0])
+                .slice(1)
+                .map((i) => ({id: i, color: randColor()}));
+            setCustom(toAdd);
 
             var processed = {
                 keys: Object.keys(dataRaw[0]).slice(1),
@@ -149,11 +179,15 @@ function AddChartModal(props) {
                     colors: chartTheme,
                     legends: 'keys',
                     anchor: 'bottom-right',
+                    groupMode: groupChecked ? 'grouped' : 'stacked',
+                    custom: customColors,
+                    setting: colorSetting
                 },
                 chartName: chartName,
             };
             props.parentCallback(data);
             setAddDialog(false);
+            clearState();
         } else {
             setAddDialog(false);
         }
@@ -171,9 +205,13 @@ function AddChartModal(props) {
                 <DialogContent>
                     <DialogContentText>
                         <FormControl>
-                            <FormLabel>Import excel document</FormLabel>
+                            <FormLabel>
+                                Import excel document (Must be .xlsx){' '}
+                            </FormLabel>
                             <Button variant="text" component="label">
-                                Upload a file
+                                {fileName
+                                    ? 'Uploaded ' + fileName
+                                    : 'Upload a file..'}
                                 <input
                                     type="file"
                                     onChange={(e) => {
@@ -182,56 +220,114 @@ function AddChartModal(props) {
                                     hidden
                                 />
                             </Button>
-                            <FormHelperText>
-                                Must be .xlsx format
-                            </FormHelperText>
                         </FormControl>
 
-                        {typeof processedData !== 'undefined' && processedData != null ? (
+                        {typeof processedData !== 'undefined' &&
+                        processedData != null ? (
                             <>
-  
-                                <TableRender data={processedData} />
-
-                                <Select
-                                    value={chartTheme}
-                                    onChange={(e) => {
-                                        setChartTheme(e.target.value);
-                                    }}>
-                                    {themeArray.map((i) => {
-                                        return (
-                                            <option key={i} value={i}>
-                                                {i}
-                                            </option>
-                                        );
-                                    })}
-                                </Select>
-                                <FormHelperText>Chart theme</FormHelperText>
+                                <Divider />
                                 <TextField
                                     id="standard-basic"
                                     onChange={(e) =>
                                         setChartName(e.target.value)
                                     }
-                                    label="Standard"
+                                    label="Title of the chart"
                                 />
-                                <FormHelperText>Chart Name</FormHelperText>
-
-                                <Chart data={processedData.data}
-                                    keys={processedData.keys}
-                                    indexBy={'Country'}
-                                    options={{
-                                        colors: 'nivo',
-                                        legends: 'keys',
-                                        anchor: 'bottom-right',
+                                <TableRender data={processedData} />
+                                <br />
+                                <Divider />
+                                <Switch
+                                    value={groupChecked ? 'grouped' : 'stacked'}
+                                    checked={groupChecked}
+                                    onChange={(e) => {
+                                        setGrouped(e.target.checked);
                                     }}
-                                />
+                                    inputProps={{
+                                        'aria-label': groupChecked
+                                            ? 'grouped'
+                                            : 'stacked',
+                                    }}
+                                />{' '}
+                                {groupChecked ? 'Grouped' : 'Stacked'}
+                                <Divider />
+                                <FormControl component="fieldset">
+                                    <FormLabel component="legend">
+                                        Coloring
+                                    </FormLabel>
+                                    <RadioGroup
+                                        aria-label="coloring"
+                                        name="coloring"
+                                        value={colorSetting}
+                                        onChange={(e) => {
+                                            setColorSetting(e.target.value);
+                                        }}>
+                                        <FormControlLabel
+                                            value="theme"
+                                            label="Use preset themes"
+                                            control={<Radio />}
+                                        />
+                                        <FormControlLabel
+                                            value="custom"
+                                            label="Use custom colors"
+                                            control={<Radio />}
+                                        />
+                                    </RadioGroup>
+                                </FormControl>
+                                {colorSetting === 'theme' ? (
+                                    <>
+                                        <Typography
+                                            variant="body1"
+                                            color="initial">
+                                            Chart Theme
+                                        </Typography>
+                                        <Select
+                                            value={chartTheme}
+                                            onChange={(e) => {
+                                                setChartTheme(e.target.value);
+                                            }}
+                                            label="Chart theme">
+                                            {themeArray.map((i) => {
+                                                return (
+                                                    <option key={i} value={i}>
+                                                        {i}
+                                                    </option>
+                                                );
+                                            })}
+                                        </Select>
+                                    </>
+                                ) : (
+                                    <>
+                                        <br />
+                                        {customColors.map((i, index) => (
+                                            <span key={index}>
+                                                {i.id} :{' '}
+                                                <input
+                                                    type="color"
+                                                    name="color picker"
+                                                    id="colorpicker"
+                                                    style={{
+                                                        width: '25px',
+                                                        marginRight: '10px',
+                                                        border: 'none',
+                                                    }}
+                                                    value={i.color}
+                                                    onChange={(e)=>{modifyCustom(i, e.target.value)}}
+                                                />
+                                            </span>
+                                        ))}
+                                    </>
+                                )}
                             </>
                         ) : (
-                            <p></p>
+                            <></>
                         )}
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={saveCurrent} disabled={processedData ? false : true} color="default">
+                    <Button
+                        onClick={saveCurrent}
+                        disabled={processedData ? false : true}
+                        color="default">
                         Save
                     </Button>
                     <Button onClick={setAddDialogClose} color="default">

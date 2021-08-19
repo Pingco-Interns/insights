@@ -4,6 +4,7 @@ import {WidthProvider, Responsive} from 'react-grid-layout';
 import Chart from './Chart';
 import AddChartModal from './AddChartModal';
 import TableRender from './TableRender';
+import EditChart from './EditChart';
 
 import Button from '@material-ui/core/Button';
 import TableChartIcon from '@material-ui/icons/TableChart';
@@ -22,6 +23,7 @@ import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import EditIcon from '@material-ui/icons/Edit';
 
 const dataRaw = [
     //Maybe this can be processed in the backend? front end can do processing too, with some templated/default values.
@@ -179,6 +181,7 @@ const dataRaw = [
             ],
             legends: 'keys',
             anchor: 'bottom-right',
+            setting: 'theme',
         },
         chartName: "Chart 1 custom name, index is 'a'",
     },
@@ -333,6 +336,7 @@ const dataRaw = [
             ],
             legends: 'keys',
             anchor: 'bottom-right',
+            setting: 'theme',
         },
     },
     {
@@ -486,6 +490,7 @@ const dataRaw = [
             ],
             legends: 'keys',
             anchor: 'bottom-right',
+            setting: 'theme',
         },
         chartName: "Another custom chart name, for chart 'c'",
     },
@@ -640,6 +645,7 @@ const dataRaw = [
             ],
             legends: 'keys',
             anchor: 'bottom-right',
+            setting: 'theme',
         },
     },
     {
@@ -793,11 +799,15 @@ const dataRaw = [
             ],
             legends: 'keys',
             anchor: 'bottom-right',
+            setting: 'theme',
         },
     },
 ];
 
 //I have a const outside of the component ^ that gives the raw data, which is then loaded into a state and used to render the charts
+
+//@see Currently working on: Edit chart, adding chart without issues, options menu etc.
+
 function PrototypeGrid(props) {
     //#region
     //can change to localstorage to save to local storage when layout changes.
@@ -805,14 +815,13 @@ function PrototypeGrid(props) {
     const ReactGridLayout = WidthProvider(Responsive);
     const [dataState, setDataState] = useState(dataRaw);
 
-    const [currentData, setCurrentData] = useState({
-        keys: dataState[0].keys,
-        data: dataState[0].data,
-    }); //holds the current data to display to the modal window. Since editing is done elsewhere this doesnt exactly need to be dynamic.
-
     const [showTableDialog, setShowTableDialog] = useState(false);
     const setTableDialogOpen = () => setShowTableDialog(true);
     const setTableDialogClose = () => setShowTableDialog(false);
+
+    const [showEditDialog, setShowEditDialog] = useState(false);
+    const setEditDialogOpen = () => setShowEditDialog(true);
+    const setEditDialogClose = () => setShowEditDialog(false);
 
     const [activeData, setActiveData] = useState(
         dataState.filter((i) => i.active),
@@ -821,7 +830,9 @@ function PrototypeGrid(props) {
         dataState.filter((i) => !i.active),
     );
 
-    const toggleActive = (item, isActive, layout) => {
+    const [currentData, setCurrentData] = useState(activeData[1]); //holds the current data to display to the modal window. Since editing is done elsewhere this doesnt exactly need to be dynamic.
+
+    const toggleActive = (item, isActive) => {
         var toAdd = item;
         toAdd.active = isActive;
         var prevActive = [...activeData];
@@ -846,14 +857,20 @@ function PrototypeGrid(props) {
     };
 
     const handleCallback = (childData) => {
-        var prev = [...dataState];
+        var prev = dataState.slice();
         prev.push(childData);
-
         setDataState(prev);
-
-        toggleActive(childData, false);
-        console.log(childData);
+        setActiveData(dataState.filter((i) => i.active));
+        setInactiveData(dataState.filter((i) => !i.active));        
+        //Something's wrong here. it removes existing data. To do later, but gonna focus on editing.
     };
+
+    const saveEditedItem = (item) => {
+        var prev = dataState.slice();
+        prev[prev.findIndex((i) => i.layout.i === item.layout.i)] = item;
+        setDataState(prev);
+    };
+
     const [showSnackbar, setSnackbar] = useState(false);
     const openSnackbar = () => setSnackbar(true);
     const closeSnackbar = () => setSnackbar(false);
@@ -918,6 +935,16 @@ function PrototypeGrid(props) {
                                     id="testing"
                                     itemProp={i}
                                     key={i.layout.i}>
+                                    <IconButton
+                                        size="small"
+                                        aria-label="close"
+                                        color="inherit"
+                                        onClick={() => {
+                                            setCurrentData(i);
+                                            setEditDialogOpen();
+                                        }}>
+                                        <EditIcon fontSize="small" />
+                                    </IconButton>
                                     {i.chartName
                                         ? i.chartName
                                         : 'Untitled chart'}
@@ -947,7 +974,6 @@ function PrototypeGrid(props) {
                                         cursor: 'pointer',
                                         borderRadius: '5px',
                                     }}
-
                                     id="testing"
                                     itemProp={i}
                                     key={i.layout.i}>
@@ -1011,11 +1037,7 @@ function PrototypeGrid(props) {
                                             size="medium"
                                             onClick={(e) => {
                                                 setTableDialogOpen();
-                                                setCurrentData({
-                                                    keys: i.keys,
-                                                    data: i.data,
-                                                    chartName: i.chartName ? i.chartName : 'Untitled chart'
-                                                });
+                                                setCurrentData(i);
                                             }}>
                                             <TableChartIcon fontSize="inherit" />
                                         </Button>
@@ -1046,12 +1068,21 @@ function PrototypeGrid(props) {
                     </ReactGridLayout>
                 </Grid>
             </Grid>
-
             <Dialog open={showTableDialog} onClose={setTableDialogClose}>
                 <DialogTitle id="form-dialog-title">Chart data</DialogTitle>
                 <DialogContent>
-                    <DialogContentText>Chart data of <b>"{currentData.chartName}"</b></DialogContentText>
-                    <TableRender data={currentData} />
+                    <DialogContentText>
+                        Chart data of "
+                        <b>
+                            {currentData.chartName
+                                ? currentData.chartName
+                                : 'Untitled chart'}
+                        </b>
+                        "
+                    </DialogContentText>
+                    <TableRender
+                        data={{data: currentData.data, keys: currentData.keys}}
+                    />
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={setTableDialogClose} color="default">
@@ -1060,8 +1091,14 @@ function PrototypeGrid(props) {
                 </DialogActions>
             </Dialog>
 
+            <EditChart
+                open={showEditDialog}
+                onClose={setEditDialogClose}
+                data={currentData}
+                onSave={saveEditedItem}
+            />
+            {/* add save callback */}
             <AddChartModal parentCallback={handleCallback} />
-
             <Snackbar
                 anchorOrigin={{
                     vertical: 'bottom',

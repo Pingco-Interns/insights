@@ -9,7 +9,6 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 
 function TableRender(props) {
-    console.log(props.data)
     return (
         <div>
             <TableContainer component={Paper}>
