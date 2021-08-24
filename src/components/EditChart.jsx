@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
 import TextField from '@material-ui/core/TextField';
+import { randColor, themeArray } from '../utils';
 
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -13,60 +14,12 @@ import Radio from '@material-ui/core/Radio';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import Button from '@material-ui/core/Button';
+import Divider from '@material-ui/core/Divider';
 
 import TableRender from './TableRender';
 import Chart from './Chart';
 
 export default function EditChart(props) {
-    const themeArray = [
-        'nivo',
-        'category10',
-        'accent',
-        'dark2',
-        'paired',
-        'pastel1',
-        'pastel2',
-        'set1',
-        'set2',
-        'set3',
-        'brown_blueGreen',
-        'purpleRed_green',
-        'pink_yellowGreen',
-        'purple_orange',
-        'red_blue',
-        'red_grey',
-        'red_yellow_blue',
-        'red_yellow_green',
-        'spectral',
-        'blues',
-        'greens',
-        'greys',
-        'oranges',
-        'purples',
-        'reds',
-        'blue_green',
-        'blue_purple',
-        'green_blue',
-        'orange_red',
-        'purple_blue_green',
-        'purple_blue',
-        'purple_red',
-        'red_purple',
-        'yellow_green_blue',
-        'yellow_green',
-        'yellow_orange_brown',
-        'yellow_orange_red',
-    ];
-
-    function randColor() {
-        var letters = '0123456789ABCDEF';
-        var color = '#';
-        for (var i = 0; i < 6; i++) {
-            color += letters[Math.floor(Math.random() * 16)];
-        }
-        return color;
-    }
-    
     const [chartName, setChartName] = useState(
         props.data.chartName ? props.data.chartName : '',
     );
@@ -76,13 +29,13 @@ export default function EditChart(props) {
     );
 
     const [chartTheme, setChartTheme] = useState(
-        props.data.options.setting === 'theme'
+        props.data.options.setting.toString() === 'theme'
             ? props.data.options.colors
-            : 'nivo', //default
+            : 'nivo' //default
     );
 
     const [customColors, setCustomColors] = useState(
-        props.data.options.setting === 'custom'
+        props.data.options.setting.toString() === 'custom'
             ? props.data.options.custom
             : props.data.keys.map((i) => {
                   return {id: i, color: randColor()};
@@ -113,6 +66,13 @@ export default function EditChart(props) {
         props.onClose()
     }
 
+    const resetData = () =>{
+        setChartTheme(props.data.options.setting.toString() === 'theme'
+        ? props.data.options.colors
+        : 'nivo' )
+        setChartName(props.data.chartName)
+    }
+
     return (
         <Dialog
             open={props.open}
@@ -128,7 +88,7 @@ export default function EditChart(props) {
                         label="Title"
                         onChange={(e) => setChartName(e.target.value)}
                         defaultValue={props.data.chartName}
-                    />
+                    /></FormControl>
                     <TableRender
                         data={{
                             data: props.data.data,
@@ -154,7 +114,7 @@ export default function EditChart(props) {
                                 control={<Radio />}
                             />
                         </RadioGroup>
-                    </FormControl>
+                    </FormControl><Divider />
                     {colorSetting === 'theme' ? (
                         <>
                             <Typography variant="body1" color="initial">
@@ -198,7 +158,6 @@ export default function EditChart(props) {
                             ))}
                         </>
                     )}
-                </FormControl>
                 <Chart
                     data={props.data.data}
                     keys={props.data.keys}

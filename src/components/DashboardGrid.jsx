@@ -24,10 +24,6 @@ const DashboardGrid = React.memo((props) => {
     const ReactGridLayout = WidthProvider(Responsive);
 
     const [currentData, setCurrentData] = useState(props.data[0]);
-    const setCurrentDataCB = (item) => {
-        setCurrentData(item);
-        props.currentDataCallback(item);
-    };
 
     const onDrop = (layout, layoutItem, _event) => {
         _event.preventDefault();
