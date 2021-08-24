@@ -1,24 +1,12 @@
 import React, {useState} from 'react';
-import {WidthProvider, Responsive} from 'react-grid-layout';
 
-import Chart from './Chart';
 import AddChartModal from './AddChartModal';
-import TableRender from './TableRender';
+import DashboardGrid from './DashboardGrid';
 import EditChart from './EditChart';
 
 import Button from '@material-ui/core/Button';
-import TableChartIcon from '@material-ui/icons/TableChart';
-import DragHandleIcon from '@material-ui/icons/DragHandle';
-import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
-
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import {Tooltip, Grid, Snackbar, IconButton} from '@material-ui/core';
+import {Grid, Snackbar, IconButton} from '@material-ui/core';
 import {Close as CloseIcon} from '@material-ui/icons';
-
 import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import Typography from '@material-ui/core/Typography';
@@ -812,12 +800,7 @@ function PrototypeGrid(props) {
     //#region
     //can change to localstorage to save to local storage when layout changes.
     //https://github.com/react-grid-layout/react-grid-layout/blob/master/test/examples/8-localstorage-responsive.jsx
-    const ReactGridLayout = WidthProvider(Responsive);
     const [dataState, setDataState] = useState(dataRaw);
-
-    const [showTableDialog, setShowTableDialog] = useState(false);
-    const setTableDialogOpen = () => setShowTableDialog(true);
-    const setTableDialogClose = () => setShowTableDialog(false);
 
     const [showEditDialog, setShowEditDialog] = useState(false);
     const setEditDialogOpen = () => setShowEditDialog(true);
@@ -831,6 +814,9 @@ function PrototypeGrid(props) {
     );
 
     const [currentData, setCurrentData] = useState(activeData[1]); //holds the current data to display to the modal window. Since editing is done elsewhere this doesnt exactly need to be dynamic.
+    const setCurrentDataCallback = (item) => {
+        setCurrentData(item);
+    };
 
     const toggleActive = (item, isActive) => {
         var toAdd = item;
@@ -861,8 +847,10 @@ function PrototypeGrid(props) {
         prev.push(childData);
         setDataState(prev);
         setActiveData(dataState.filter((i) => i.active));
-        setInactiveData(dataState.filter((i) => !i.active));        
+        setInactiveData(dataState.filter((i) => !i.active));
         //Something's wrong here. it removes existing data. To do later, but gonna focus on editing.
+        //The suspicion lands on toggleActive() for removals. to mitigate this, active data refresh is done manually
+        //this is now causing an issue where the last added item is not shown in disabled reports. investigate
     };
 
     const saveEditedItem = (item) => {
@@ -875,10 +863,8 @@ function PrototypeGrid(props) {
     const openSnackbar = () => setSnackbar(true);
     const closeSnackbar = () => setSnackbar(false);
 
-    const onDrop = (layout, layoutItem, _event) => {
-        _event.preventDefault();
-        const data = _event.dataTransfer.getData('text');
-        const item = inactiveData[data];
+    const handleDropCallback = (index, layoutItem) => {
+        const item = inactiveData[index];
 
         item.layout = {
             i: item.layout.i,
@@ -986,110 +972,14 @@ function PrototypeGrid(props) {
                     </Accordion>
                 </Grid>
                 <Grid item xs={10}>
-                    <ReactGridLayout
-                        style={{border: '1px solid grey', minHeight: '500px'}}
-                        className="layout"
-                        cols={{lg: 12, md: 10, sm: 6, xs: 4, xxs: 2}}
-                        rows={15}
-                        rowHeight={100}
-                        breakpoints={{
-                            lg: 1200,
-                            md: 996,
-                            sm: 768,
-                            xs: 480,
-                            xxs: 0,
-                        }}
-                        width={1200}
-                        isDroppable={true}
-                        onDrop={onDrop}
-                        draggableHandle=".draggableHandle">
-                        {activeData.map((i) => {
-                            return (
-                                <div
-                                    style={{
-                                        border: '1px solid black',
-                                        borderRadius: '4px',
-                                    }}
-                                    data-grid={i.layout}
-                                    key={i.layout.i}>
-                                    <Tooltip title="Drag chart">
-                                        <div
-                                            id="handle"
-                                            className="draggableHandle"
-                                            style={{
-                                                textAlign: 'center',
-                                                backgroundColor: 'lightblue',
-                                                minWidth: '100%',
-                                                minHeight: '25px',
-                                                position: 'fixed',
-                                                cursor: 'pointer',
-                                                borderTopLeftRadius: '4px',
-                                                borderTopRightRadius: '4px',
-                                            }}>
-                                            <DragHandleIcon fontSize="inherit" />
-                                            {i.chartName
-                                                ? i.chartName
-                                                : 'Untitled chart'}
-                                        </div>
-                                    </Tooltip>
-                                    <Tooltip title="Show table">
-                                        <Button
-                                            size="medium"
-                                            onClick={(e) => {
-                                                setTableDialogOpen();
-                                                setCurrentData(i);
-                                            }}>
-                                            <TableChartIcon fontSize="inherit" />
-                                        </Button>
-                                    </Tooltip>
-                                    <Tooltip title="Remove chart">
-                                        <Button
-                                            size="medium"
-                                            onClick={() =>
-                                                toggleActive(i, false)
-                                            }
-                                            style={{float: 'right'}}>
-                                            <RemoveCircleIcon fontSize="inherit" />
-                                        </Button>
-                                    </Tooltip>
-                                    <Chart
-                                        className="nonDraggable"
-                                        data={i.data}
-                                        keys={i.keys}
-                                        indexBy={i.indexBy}
-                                        layout={i.layout}
-                                        legendLeft={i.legendLeft}
-                                        legendBottom={i.legendBottom}
-                                        options={i.options}
-                                    />
-                                </div>
-                            );
-                        })}
-                    </ReactGridLayout>
+                    <DashboardGrid
+                        data={activeData}
+                        toggleActive={toggleActive}
+                        handleDrop={handleDropCallback}
+                        currentDataCallback={setCurrentDataCallback}
+                    />
                 </Grid>
             </Grid>
-            <Dialog open={showTableDialog} onClose={setTableDialogClose}>
-                <DialogTitle id="form-dialog-title">Chart data</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>
-                        Chart data of "
-                        <b>
-                            {currentData.chartName
-                                ? currentData.chartName
-                                : 'Untitled chart'}
-                        </b>
-                        "
-                    </DialogContentText>
-                    <TableRender
-                        data={{data: currentData.data, keys: currentData.keys}}
-                    />
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={setTableDialogClose} color="default">
-                        Close
-                    </Button>
-                </DialogActions>
-            </Dialog>
 
             <EditChart
                 open={showEditDialog}
