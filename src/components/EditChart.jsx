@@ -24,7 +24,7 @@ export default function EditChart(props) {
     const [currentItem, setCurrentItem] = useState(props.data);
 
     const [chartName, setChartName] = useState(
-        currentItem.chartName ? currentItem.chartName : '',
+        currentItem.chartName && currentItem.chartName,
     );
 
     const [colorSetting, setColorSetting] = useState(
@@ -73,7 +73,7 @@ export default function EditChart(props) {
         
     useEffect(() => { //change state to defaults/current item when the selected item is changed.
         const setData = () => {
-            setChartName(props.data.chartName ? currentItem.chartName : '');
+            setChartName(props.data.chartName && currentItem.chartName);
             setColorSetting(
                 props.data.options.setting ? props.data.options.setting : 'theme',
             );
