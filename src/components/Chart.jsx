@@ -1,6 +1,7 @@
 import React from 'react';
 import {ResponsiveBarCanvas} from '@nivo/bar';
 import PropTypes from 'prop-types';
+import { themeArray } from '../utils';
 
 //try to get the chart stuff in a responsive grid
 function Chart(props) {
@@ -104,45 +105,7 @@ Chart.propTypes = {
     legendBottom: PropTypes.string,
     filters: PropTypes.arrayOf(PropTypes.object),
     options: PropTypes.exact({
-        colors: PropTypes.oneOf([
-            'nivo',
-            'category10',
-            'accent',
-            'dark2',
-            'paired',
-            'pastel1',
-            'pastel2',
-            'set1',
-            'set2',
-            'set3',
-            'brown_blueGreen',
-            'purpleRed_green',
-            'pink_yellowGreen',
-            'purple_orange',
-            'red_blue',
-            'red_grey',
-            'red_yellow_blue',
-            'red_yellow_green',
-            'spectral',
-            'blues',
-            'greens',
-            'greys',
-            'oranges',
-            'purples',
-            'reds',
-            'blue_green',
-            'blue_purple',
-            'green_blue',
-            'orange_red',
-            'purple_blue_green',
-            'purple_blue',
-            'purple_red',
-            'red_purple',
-            'yellow_green_blue',
-            'yellow_green',
-            'yellow_orange_brown',
-            'yellow_orange_red',
-        ]),
+        colors: PropTypes.oneOf(themeArray),
         custom: PropTypes.array,
         defs: PropTypes.arrayOf(PropTypes.object),
         fill: PropTypes.arrayOf(PropTypes.object),

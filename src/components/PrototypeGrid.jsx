@@ -170,6 +170,7 @@ const dataRaw = [
             legends: 'keys',
             anchor: 'bottom-right',
             setting: 'theme',
+            groupMode: 'stacked'
         },
         chartName: "Chart 1 custom name, index is 'a'",
     },
@@ -325,6 +326,7 @@ const dataRaw = [
             legends: 'keys',
             anchor: 'bottom-right',
             setting: 'theme',
+            groupMode: 'stacked'
         },
     },
     {
@@ -479,6 +481,7 @@ const dataRaw = [
             legends: 'keys',
             anchor: 'bottom-right',
             setting: 'theme',
+            groupMode: 'stacked'
         },
         chartName: "Another custom chart name, for chart 'c'",
     },
@@ -634,6 +637,7 @@ const dataRaw = [
             legends: 'keys',
             anchor: 'bottom-right',
             setting: 'theme',
+            groupMode: 'stacked'
         },
     },
     {
@@ -788,6 +792,7 @@ const dataRaw = [
             legends: 'keys',
             anchor: 'bottom-right',
             setting: 'theme',
+            groupMode: 'stacked'
         },
     },
 ];
@@ -845,9 +850,11 @@ function PrototypeGrid(props) {
     const handleCallback = (childData) => {
         var prev = dataState.slice();
         prev.push(childData);
+        console.log(dataState);
         setDataState(prev);
-        setActiveData(dataState.filter((i) => i.active));
-        setInactiveData(dataState.filter((i) => !i.active));
+        console.log(dataState);
+        setActiveData(prev.filter((i) => i.active));
+        setInactiveData(prev.filter((i) => !i.active));
         //Something's wrong here. it removes existing data. To do later, but gonna focus on editing.
         //The suspicion lands on toggleActive() for removals. to mitigate this, active data refresh is done manually
         //this is now causing an issue where the last added item is not shown in disabled reports. investigate

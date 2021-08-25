@@ -115,11 +115,11 @@ function AddChartModal(props) {
                 rawKeys: processedData.rawKeys,
                 active: false,
                 options: {
-                    colors: chartTheme,
+                    colors: colorSetting === 'custom' ? null : chartTheme,
                     legends: 'keys',
                     anchor: 'bottom-right',
                     groupMode: groupChecked ? 'grouped' : 'stacked',
-                    custom: customColors,
+                    custom: colorSetting === 'custom' ? customColors : null,
                     setting: colorSetting
                 },
                 chartName: chartName,
