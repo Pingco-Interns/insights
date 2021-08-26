@@ -3,25 +3,17 @@ import {ResponsiveBarCanvas} from '@nivo/bar';
 import PropTypes from 'prop-types';
 import { themeArray } from '../utils';
 
-//try to get the chart stuff in a responsive grid
 function Chart(props) {
-    // var colors;
-    // if (props.options.setting === 'theme') {
-    //     colors = {scheme : props.options.colors.toString()}
-    // } else if(props.options.setting === 'custom') {
-    //     props.options.custom.map((i) => (colors[i.id] = i.color)); 
-    // }
-
-    // console.log({["Colors object"]: colors, setting: props.options.setting, props: props.options})
 
     var _colors = {}
-
+    // select custom or preset themes
     if (props.options.setting === 'custom') {
         props.options.custom.map((i) => (_colors[i.id] = i.color));
     }else if(props.options.setting === 'theme'){
         _colors = {scheme: props.options.colors.toString()}
     }
 
+    // mapping bar to colours. reference to https://github.com/plouc/nivo/issues/581
     const getColor = bar => _colors[bar.id]
     
     return (
@@ -90,6 +82,7 @@ function Chart(props) {
     );
 }
 
+//data validation. to overhaul
 Chart.propTypes = {
     data: PropTypes.array.isRequired,
     keys: PropTypes.array.isRequired,

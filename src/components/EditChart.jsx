@@ -21,23 +21,21 @@ import TableRender from './TableRender';
 import Chart from './Chart';
 
 export default function EditChart(props) {
-    const [currentItem, setCurrentItem] = useState(props.data);
 
+    // #region seting up default data
+    const [currentItem, setCurrentItem] = useState(props.data);
     const [chartName, setChartName] = useState(
         currentItem.chartName && currentItem.chartName,
     );
-
     const [colorSetting, setColorSetting] = useState(
         currentItem.options.setting ? currentItem.options.setting : 'theme',
     );
     const [groupChecked, setGrouped] = useState(currentItem.options.groupMode);
-
     const [chartTheme, setChartTheme] = useState(
         currentItem.options.setting.toString() === 'theme'
             ? currentItem.options.colors
             : 'nivo', //default
     );
-
     const [customColors, setCustomColors] = useState(
         currentItem.options.setting.toString() === 'custom'
             ? currentItem.options.custom
@@ -45,7 +43,9 @@ export default function EditChart(props) {
                   return {id: i, color: randColor()};
               })
     );
+    // #endregion
 
+    //modify existing colour for a specific chart section
     const modifyCustom = (item, newColor) => {
         var index = customColors.findIndex((x) => x.id === item.id);
         if (index !== -1) {
@@ -55,6 +55,7 @@ export default function EditChart(props) {
         }
     };
 
+    // save data
     const saveData = () => {
         var toSave = currentItem;
         toSave.options = {
@@ -69,7 +70,6 @@ export default function EditChart(props) {
         props.onSave(toSave);
         props.onClose();
     };
-    // eslint-disable-next-line
         
     useEffect(() => { //change state to defaults/current item when the selected item is changed.
         const setData = () => {

@@ -25,6 +25,7 @@ import Radio from '@material-ui/core/Radio';
 import Typography from '@material-ui/core/Typography';
 
 function AddChartModal(props) {
+    //style for add button
     const butStyle = {
         margin: 0,
         top: 'auto',
@@ -38,12 +39,15 @@ function AddChartModal(props) {
     const setAddDialogOpen = () => setAddDialog(true);
     const setAddDialogClose = () => setAddDialog(false);
 
+    //states for variables
     const [chartTheme, setChartTheme] = useState('nivo');
     const [fileName, setFileName] = useState('');
     const [chartName, setChartName] = useState('');
     const [colorSetting, setColorSetting] = useState('theme');
     const [customColors, setCustom] = useState([{}]);
+    const [groupChecked, setGrouped] = useState(false);
 
+    //modify existing colour for a specific chart section
     const modifyCustom = (item, newColor) => {
         var index = customColors.findIndex(x=> x.id===item.id)
         if(index !== -1){
@@ -53,10 +57,10 @@ function AddChartModal(props) {
         }
     };
 
+    //holds data processed by filereader
     const [processedData, setProcessed] = useState();
-
-    const [groupChecked, setGrouped] = useState(false);
     
+    // returns state to default values
     function clearState(){
         setChartTheme('nivo')
         setFileName('')
@@ -66,6 +70,7 @@ function AddChartModal(props) {
         setGrouped(false)
     }
 
+    // converting xlsx to usable chart data
     function onChange(e) {
         const reader = new FileReader();
         const filename = e.target.files[0].name;
@@ -97,6 +102,7 @@ function AddChartModal(props) {
         reader.readAsBinaryString(e.target.files[0]);
     }
 
+    // on save, create json obj and send to parent through callback
     function saveCurrent() {
         if (processedData) {
             var data = {

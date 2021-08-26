@@ -14,10 +14,11 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import EditIcon from '@material-ui/icons/Edit';
 
 const dataRaw = [
-    //Maybe this can be processed in the backend? front end can do processing too, with some templated/default values.
+
+    //Maybe data can be processed in the backend? front end can do processing too, with some templated/default values.
     //all properties except layout is used by nivo to render the chart and can be customised.
     //layout docs can be found here https://github.com/react-grid-layout/react-grid-layout#usage
-
+    //TODO: data options and settings need to be more opinionated.
     {
         data: [
             {
@@ -799,7 +800,7 @@ const dataRaw = [
 
 //I have a const outside of the component ^ that gives the raw data, which is then loaded into a state and used to render the charts
 
-//@see Currently working on: Edit chart, adding chart without issues, options menu etc.
+//@see Currently working on: Edit chart, adding chart without issues, options menu etc, localstorage layout changes.
 
 function PrototypeGrid(props) {
     //#region
@@ -818,11 +819,12 @@ function PrototypeGrid(props) {
         dataState.filter((i) => !i.active),
     );
 
-    const [currentData, setCurrentData] = useState(activeData[1]); //holds the current data to display to the modal window. Since editing is done elsewhere this doesnt exactly need to be dynamic.
+    const [currentData, setCurrentData] = useState(activeData[1]); //holds the current data to display to the modal window defaults to first element. Since editing is done elsewhere this doesnt exactly need to be dynamic.
     const setCurrentDataCallback = (item) => {
         setCurrentData(item);
     };
 
+    // toggles if the specified chart is active or not. sets the active property to the desired value.
     const toggleActive = (item, isActive) => {
         var toAdd = item;
         toAdd.active = isActive;
@@ -861,15 +863,18 @@ function PrototypeGrid(props) {
     };
 
     const saveEditedItem = (item) => {
+        // handle callback from EditChart and save the item into the collection
         var prev = dataState.slice();
         prev[prev.findIndex((i) => i.layout.i === item.layout.i)] = item;
         setDataState(prev);
     };
 
+    // TODO: delete by drag n drop
     const [showSnackbar, setSnackbar] = useState(false);
     const openSnackbar = () => setSnackbar(true);
     const closeSnackbar = () => setSnackbar(false);
 
+    // on drop callback to save item into collection
     const handleDropCallback = (index, layoutItem) => {
         const item = inactiveData[index];
 

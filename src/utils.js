@@ -1,3 +1,5 @@
+// some util functions to use it later.
+
 export function randColor() {
     var letters = '0123456789ABCDEF';
     var color = '#';

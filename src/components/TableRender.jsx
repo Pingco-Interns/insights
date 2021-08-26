@@ -15,7 +15,7 @@ function TableRender(props) {
                 <Table className={{minWidth: 650}} size="small">
                     <TableHead>
                         <TableRow>
-                            {/* gonna hardcode the first row for readability. */}
+                            {/* gonna hardcode the first row for readability. gonna change */}
                             <TableCell>Country/Food</TableCell>
                             {props.data.keys.map((i) => {
                                 return <TableCell align="right">{i}</TableCell>;
@@ -24,7 +24,7 @@ function TableRender(props) {
                     </TableHead>
                     <TableBody>
                         {props.data.data.map((i) => {
-                            //this convoluted mess is to render the table using keys and data grabbed from the
+                            //this convoluted mess is to render the table using keys and data grabbed from the prop data passed in.
                             return (
                                 <TableRow>
                                     <TableCell align="right">

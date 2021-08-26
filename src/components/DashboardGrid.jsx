@@ -18,17 +18,22 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import {Tooltip} from '@material-ui/core';
 
 const DashboardGrid = React.memo((props) => {
+    // dialog state vars
     const [showTableDialog, setShowTableDialog] = useState(false);
     const setTableDialogOpen = () => setShowTableDialog(true);
     const setTableDialogClose = () => setShowTableDialog(false);
+
+    // specify the kind of grid used. responsive is used to ensure mutiple viewports can be supported
     const ReactGridLayout = WidthProvider(Responsive);
 
+    // holder for the current data being interacted with.
     const [currentData, setCurrentData] = useState(props.data[0]);
 
+    //dropping to grid
     const onDrop = (layout, layoutItem, _event) => {
         _event.preventDefault();
         props.handleDrop(_event.dataTransfer.getData('text'), layoutItem);
-        //index
+        // pass layout callback result and event storage to parent through callback
     };
 
     return (
